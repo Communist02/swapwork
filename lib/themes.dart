@@ -44,6 +44,7 @@ class AppThemes {
 
     final ThemeData base = ThemeData(
       brightness: Brightness.dark,
+      primarySwatch: _materialColor(Colors.white),
       primaryColor: primaryColor,
       backgroundColor: primaryColor,
       scaffoldBackgroundColor: primaryColor,
@@ -63,7 +64,7 @@ class AppThemes {
       ),
       splashColor: Colors.white10,
       cardColor: cardColor,
-      indicatorColor: Colors.white, colorScheme: ColorScheme.fromSwatch(primarySwatch: _materialColor(Colors.white)).copyWith(secondary: Colors.white),
+      indicatorColor: Colors.white,
     );
     return base;
   }

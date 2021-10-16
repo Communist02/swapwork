@@ -1,3 +1,24 @@
+class Order {
+  String theme;
+  String description;
+
+  Order({this.theme = '', this.description = ''});
+}
+
+class Orders {
+  List<Order> orders;
+
+  Orders(this.orders);
+
+  void add(Order order) {
+    orders.insert(0, order);
+  }
+
+  void clear() {
+    orders.clear();
+  }
+}
+
 class Account {
   String? id;
   String? email;
