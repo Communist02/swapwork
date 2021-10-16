@@ -12,28 +12,34 @@ class AppThemes {
   }
 
   ThemeData light() {
-    final Color accentColor = Colors.amber.shade600;
+    const Color accentColor = Colors.deepPurpleAccent;
+    const Color cardColor = Color(0xFFEEEEEE);
 
     final ThemeData base = ThemeData(
-      brightness: Brightness.light,
+     brightness: Brightness.light,
+      primarySwatch: _materialColor(accentColor),
       primaryColor: accentColor,
+      scaffoldBackgroundColor: Colors.white,
+      indicatorColor: accentColor,
+      cardColor: cardColor,
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFFFAFAFA),
+        elevation: 0,
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.white,
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 2,
         backgroundColor: Colors.white,
         foregroundColor: Colors.grey[700],
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         selectedItemColor: accentColor,
         unselectedItemColor: Colors.black,
       ),
-      indicatorColor: accentColor,
       tabBarTheme: const TabBarTheme(
         labelColor: Colors.black,
         unselectedLabelColor: Colors.black,
-      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: _materialColor(accentColor)).copyWith(secondary: accentColor),
+      ),
     );
     return base;
   }
@@ -46,7 +52,14 @@ class AppThemes {
       brightness: Brightness.dark,
       primarySwatch: _materialColor(Colors.white),
       primaryColor: primaryColor,
+      cardColor: cardColor,
       backgroundColor: primaryColor,
+      splashColor: Colors.white10,
+      indicatorColor: Colors.white,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: primaryColor,
+        elevation: 0,
+      ),
       scaffoldBackgroundColor: primaryColor,
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 2,
@@ -62,9 +75,6 @@ class AppThemes {
         labelColor: Colors.black,
         unselectedLabelColor: Colors.white,
       ),
-      splashColor: Colors.white10,
-      cardColor: cardColor,
-      indicatorColor: Colors.white,
     );
     return base;
   }
@@ -78,7 +88,7 @@ MaterialColor _materialColor(Color color) {
   for (int i = 1; i < 10; i++) {
     strengths.add(0.1 * i);
   }
-  for (var strength in strengths) {
+  for (final double strength in strengths) {
     final double ds = 0.5 - strength;
     swatch[(strength * 1000).round()] = Color.fromRGBO(
       r + ((ds < 0 ? r : (255 - r)) * ds).round(),

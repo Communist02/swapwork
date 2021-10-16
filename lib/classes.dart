@@ -1,8 +1,10 @@
 class Order {
-  String theme;
+  String title;
   String description;
+  String nameQuestioner;
+  DateTime dateTime = DateTime.now();
 
-  Order({this.theme = '', this.description = ''});
+  Order(this.title, {this.description = '', this.nameQuestioner = 'Anonymous'});
 }
 
 class Orders {

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+//import 'package:provider/provider.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+//import 'state_update.dart';
+import 'orders.dart';
+import 'my_orders.dart';
+import 'settings.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -9,38 +15,51 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  int _index = 0;
+  final List<Widget> _page = [
+    const OrdersPage(),
+    const MyOrdersPage(),
+    const SettingsPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    //if (context.watch<ChangeNavigation>().getSwitch) {
+    //_index = context.watch<ChangeNavigation>().getIndex;
+    //}
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      body: _page[_index],
+      bottomNavigationBar: BottomNavyBar(
+        selectedIndex: _index,
+        iconSize: 30,
+        backgroundColor:
+            Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        onItemSelected: (int index) {
+          setState(() => _index = index);
+        },
+        items: [
+          BottomNavyBarItem(
+            icon: const Icon(Icons.receipt_outlined),
+            title: const Text('Заказы', overflow: TextOverflow.ellipsis),
+            activeColor: Colors.green,
+            inactiveColor:
+                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          ),
+          BottomNavyBarItem(
+            icon: const Icon(Icons.my_library_books_outlined),
+            title: const Text('Мои заказы', overflow: TextOverflow.ellipsis),
+            activeColor: Colors.red,
+            inactiveColor:
+                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          ),
+          BottomNavyBarItem(
+            icon: const Icon(Icons.settings_outlined),
+            title: const Text('Настройки', overflow: TextOverflow.ellipsis),
+            activeColor: Colors.blue,
+            inactiveColor:
+                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          ),
+        ],
       ),
     );
   }
