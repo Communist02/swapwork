@@ -21,6 +21,36 @@ class Orders {
   }
 }
 
+class Message {
+  String value;
+  String sender;
+  DateTime dateTime;
+  bool isYou;
+
+  Message(this.value, this.sender, this.dateTime, this.isYou);
+}
+
+class Contact {
+  String name;
+  List<Message> chat;
+
+  Contact(this.name, this.chat);
+
+  Message? lastMessage() {
+    if (chat.isNotEmpty) {
+      return chat[0];
+    } else {
+      return null;
+    }
+  }
+}
+
+class Contacts {
+  List<Contact> contacts;
+
+  Contacts(this.contacts);
+}
+
 class Account {
   String? id;
   String? email;
@@ -63,4 +93,3 @@ class SearchHistory {
     }
   }
 }
-

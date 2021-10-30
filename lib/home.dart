@@ -5,6 +5,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'orders.dart';
 import 'my_orders.dart';
 import 'settings.dart';
+import 'messages.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   int _index = 0;
   final List<Widget> _page = [
     const OrdersPage(),
+    const MessagesPage(),
     const MyOrdersPage(),
     const SettingsPage(),
   ];
@@ -46,6 +48,13 @@ class _HomePageState extends State<HomePage> {
                 Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
           ),
           BottomNavyBarItem(
+            icon: const Icon(Icons.message_outlined),
+            title: const Text('Сообщения', overflow: TextOverflow.ellipsis),
+            activeColor: Colors.blue,
+            inactiveColor:
+                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          ),
+          BottomNavyBarItem(
             icon: const Icon(Icons.my_library_books_outlined),
             title: const Text('Мои заказы', overflow: TextOverflow.ellipsis),
             activeColor: Colors.red,
@@ -55,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavyBarItem(
             icon: const Icon(Icons.settings_outlined),
             title: const Text('Настройки', overflow: TextOverflow.ellipsis),
-            activeColor: Colors.blue,
+            activeColor: Colors.purple,
             inactiveColor:
                 Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
           ),

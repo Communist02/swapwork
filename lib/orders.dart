@@ -27,31 +27,26 @@ class OrderView extends StatelessWidget {
 
   const OrderView(this.order, {Key? key}) : super(key: key);
 
+  String dateTime(DateTime dateTime) {
+    final DateTime timeNow = DateTime.now();
+    final Duration difference = timeNow.difference(dateTime);
+    if (difference.inMinutes < 1) {
+      return difference.inSeconds.toString() + ' сек. назад';
+    } else if (difference.inHours < 1) {
+      return difference.inMinutes.toString() + ' мин. назад';
+    } else if (difference.inDays < 1) {
+      return difference.inHours.toString() + ' ч. назад';
+    } else if (difference.inDays < 2) {
+      return 'Вчера';
+    } else if (difference.inDays < 7) {
+      return difference.inDays.toString() + ' д. назад';
+    } else {
+      return DateFormat('dd.MM.yyyy').format(dateTime);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    String dateTime() {
-      final DateTime timeOrder = order.dateTime;
-      final DateTime timeNow = DateTime.now();
-      String dateTime = '';
-      final Duration difference = timeNow.difference(timeOrder);
-      if (difference.inMinutes < 1) {
-        dateTime = difference.inSeconds.toString() + ' сек. назад';
-      }
-      else if (difference.inHours < 1) {
-        dateTime = difference.inMinutes.toString() + ' мин. назад';
-      }
-      else if (difference.inDays < 1) {
-        dateTime = difference.inHours.toString() + ' ч. назад';
-      }
-      else if (difference.inDays < 7) {
-        dateTime = difference.inDays.toString() + ' д. назад';
-      }
-      else {
-        dateTime = DateFormat('dd.MM.yyyy').format(order.dateTime);
-      }
-      return dateTime;
-    }
-
     return InkWell(
       onTap: () {},
       child: Card(
@@ -75,9 +70,9 @@ class OrderView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      dateTime(),
-                      style: const TextStyle(
-                        color: Colors.grey,
+                      dateTime(order.dateTime),
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.caption!.color,
                       ),
                     ),
                   ],
@@ -104,11 +99,12 @@ class OrdersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        key: const PageStorageKey('Orders'),
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        itemCount: globalOrders.orders.length,
-        itemBuilder: (context, int i) {
-          return OrderView(globalOrders.orders[i]);
-        });
+      key: const PageStorageKey('Orders'),
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      itemCount: globalOrders.orders.length,
+      itemBuilder: (context, int i) {
+        return OrderView(globalOrders.orders[i]);
+      },
+    );
   }
 }
