@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'classes.dart';
 import 'package:intl/intl.dart';
+import 'global.dart';
 
 class ChatPage extends StatefulWidget {
   final Contact contact;
@@ -15,6 +16,7 @@ class _ChatPageState extends State<ChatPage> {
   final Contact contact;
   bool isChanged = false;
   FocusNode focusNode = FocusNode();
+  var textController = TextEditingController();
 
   _ChatPageState(this.contact);
 
@@ -55,10 +57,14 @@ class _ChatPageState extends State<ChatPage> {
           }),
         ],
       ),
-      body: ChatView(contact.chat),
+      body: Container(
+        margin: const EdgeInsets.only(bottom: 50),
+        child: ChatView(contact.chat),
+      ),
       bottomSheet: ListTile(
         tileColor: Theme.of(context).cardColor,
         title: TextField(
+          controller: textController,
           focusNode: focusNode,
           minLines: 1,
           maxLines: 3,
@@ -73,6 +79,8 @@ class _ChatPageState extends State<ChatPage> {
             ? IconButton(
                 onPressed: () {
                   setState(() {
+                    globalContacts.addMessage(contact, textController.value.text);
+                    textController.clear();
                     focusNode.unfocus();
                   });
                 },
@@ -98,44 +106,47 @@ class MessageView extends StatelessWidget {
         mainAxisAlignment:
             isYou ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          Card(
-            elevation: 0,
-            color:
-                isYou ? Colors.deepPurpleAccent : Theme.of(context).cardColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(15),
-                topRight: const Radius.circular(15),
-                bottomLeft: isYou ? const Radius.circular(15) : Radius.zero,
-                bottomRight: isYou ? Radius.zero : const Radius.circular(15),
+          Flexible(
+            child: Card(
+              elevation: 0,
+              color:
+                  isYou ? Colors.deepPurpleAccent : Theme.of(context).cardColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(13),
+                  topRight: const Radius.circular(13),
+                  bottomLeft: isYou ? const Radius.circular(13) : Radius.zero,
+                  bottomRight: isYou ? Radius.zero : const Radius.circular(13),
+                ),
               ),
-            ),
-            margin: EdgeInsets.only(
-                top: 6,
-                bottom: 6,
-                left: (isYou ? 100 : 6),
-                right: (isYou ? 6 : 100)),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    message.value,
-                    style: TextStyle(
-                      color: isYou ? Colors.white : null,
+              margin: EdgeInsets.only(
+                  top: 6,
+                  bottom: 6,
+                  left: (isYou ? 100 : 6),
+                  right: (isYou ? 6 : 100)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      message.value,
+                      style: TextStyle(
+                        color: isYou ? Colors.white : null,
+                      ),
                     ),
-                  ),
-                  Text(
-                    DateFormat('hh:mm').format(message.dateTime),
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isYou
-                          ? Colors.white
-                          : Theme.of(context).textTheme.caption!.color,
+                    Text(
+                      DateFormat('hh:mm').format(message.dateTime),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isYou
+                            ? Colors.white
+                            : Theme.of(context).textTheme.caption!.color,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -199,9 +210,11 @@ class ChatView extends StatelessWidget {
       return list;
     }
 
-    return ListView(
-      padding: const EdgeInsets.only(bottom: 50),
-      children: messagesList(),
+    return Scrollbar(
+      child: ListView(
+        padding: const EdgeInsets.only(bottom: 50),
+        children: messagesList(),
+      ),
     );
   }
 }

@@ -43,12 +43,26 @@ class Contact {
       return null;
     }
   }
+
+  addMessage(String value) {
+    chat.add(Message(value, name, DateTime.now(), true));
+  }
 }
 
 class Contacts {
   List<Contact> contacts;
 
   Contacts(this.contacts);
+
+  bool addMessage(Contact contact, String value) {
+    for (Contact contactIt in contacts) {
+      if (contact.name == contactIt.name) {
+        contactIt.addMessage(value);
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 class Account {

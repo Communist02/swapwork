@@ -10,5 +10,7 @@ Contacts globalContacts = Contacts([
     Message('Ты лох', 'Илон Маск', DateTime.now(), false),
     Message('Ты даун', 'Илон Маск', DateTime.now(), false),
     Message('Ты даун', 'Вы', DateTime.now(), true),
+    Message('Знай свое место, урод', 'Вы', DateTime.now(), true),
+    Message('Твое место у параши, даун. Ты любишь кабачки? Я нет', 'Вы', DateTime.now(), true),
   ])
 ]);
