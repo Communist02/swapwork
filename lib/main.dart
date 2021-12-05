@@ -5,6 +5,8 @@ import 'state_update.dart';
 import 'themes.dart';
 import 'global.dart';
 import 'home.dart';
+import 'firebase.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +18,8 @@ void main() async {
   final search = prefs.getStringList('searchHistory');
   if (search != null) searchHistory.history = search;
 
+  await Firebase.initializeApp();
+  AuthService().sign();
   runApp(const MyApp());
 }
 

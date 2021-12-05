@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "82257351015",
+    "project_id": "swapwork-base",
+    "storage_bucket": "swapwork-base.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82257351015:android:7da5759c7737c1e2d9dfc2",
+        "android_client_info": {
+          "package_name": "com.mazur.swapwork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "82257351015-c50ka5gjo23kb9nsu6rqphq515cbt2ht.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0jzsIDIyxWupjqEkSyb97XHiY8DkUhOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "82257351015-c50ka5gjo23kb9nsu6rqphq515cbt2ht.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

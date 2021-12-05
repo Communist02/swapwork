@@ -6,6 +6,7 @@ import 'orders.dart';
 import 'my_orders.dart';
 import 'settings.dart';
 import 'messages.dart';
+import 'profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
     const MessagesPage(),
     const MyOrdersPage(),
     const SettingsPage(),
+    const ProfilePage(),
   ];
 
   @override
@@ -65,6 +67,13 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.settings_outlined),
             title: const Text('Настройки', overflow: TextOverflow.ellipsis),
             activeColor: Colors.purple,
+            inactiveColor:
+                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          ),
+          BottomNavyBarItem(
+            icon: const Icon(Icons.person_outlined),
+            title: const Text('Профиль', overflow: TextOverflow.ellipsis),
+            activeColor: Colors.orange,
             inactiveColor:
                 Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
           ),

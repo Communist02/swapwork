@@ -61,12 +61,14 @@ class ContactView extends StatelessWidget {
     Message? lastMessage = contact.lastMessage();
 
     return InkWell(
-      onTap: () {Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChatPage(contact),
-        ),
-      );},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatPage(contact),
+          ),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: Row(
@@ -138,4 +140,3 @@ class ContactsView extends StatelessWidget {
     );
   }
 }
-

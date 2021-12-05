@@ -3,6 +3,7 @@ import 'classes.dart';
 
 class OrderPage extends StatefulWidget {
   final Order order;
+
   const OrderPage(this.order, {Key? key}) : super(key: key);
 
   @override
@@ -11,21 +12,62 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   final Order order;
+
   _OrderPageState(this.order);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
-      floatingActionButton: FloatingActionButton(
-        mini: true,
-        onPressed: () => Navigator.pop(context),
-        child: (const Icon(Icons.arrow_back_ios)),
+      appBar: AppBar(
+        title: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                const FlutterLogo(),
+                Text(
+                  order.nameQuestioner,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(top: 8, bottom: 8, right: 10),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(90),
+                  ),
+                ),
+              ),
+              onPressed: () {},
+              child: const Text('Написать'),
+            ),
+          ),
+        ],
       ),
       body: ListView(
         children: [
-          Text(order.title),
-          Text(order.description),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: Text(
+              order.title,
+              style: const TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: Text(order.description),
+          ),
         ],
       ),
     );

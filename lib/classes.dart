@@ -68,10 +68,14 @@ class Contacts {
 class Account {
   String? id;
   String? email;
+  String nickname = '';
+  String avatar = '';
 
   void clear() {
     id = null;
     email = null;
+    nickname = '';
+    avatar = '';
   }
 }
 

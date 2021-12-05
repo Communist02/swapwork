@@ -4,7 +4,7 @@ Map<String, String> appSettings = {'theme': 'system'};
 SearchHistory searchHistory = SearchHistory([]);
 Account account = Account();
 Orders globalOrders =
-    Orders([Order('Создать диаграмму'), Order('Решить задачу')]);
+    Orders([Order('Создать диаграмму', description: 'Нужно создать UML диаграмму по шаблону'), Order('Решить задачу')]);
 Contacts globalContacts = Contacts([
   Contact('Илон Маск', [
     Message('Ты лох', 'Илон Маск', DateTime.now(), false),
