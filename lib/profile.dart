@@ -53,7 +53,7 @@ class Profile extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.person_outline_rounded, size: 100),
           minLeadingWidth: 100,
-          title: Text(account.email!),
+          title: Text(account.nickname),
           minVerticalPadding: 40,
         ),
         Container(
@@ -380,7 +380,7 @@ class Registration extends StatelessWidget {
               if (_formKey.currentState!.validate()) {
                 final AuthService _authService = AuthService();
                 if (await _authService.registerEmailPassword(
-                    _email, _password)) {
+                    _email, _password, _nickname)) {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Регистрация прошла успешно'),
                   ));

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'classes.dart';
 import 'global.dart';
 import 'order.dart';
+import 'firebase.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({Key? key}) : super(key: key);
@@ -18,7 +19,13 @@ class _OrdersPageState extends State<OrdersPage> {
       appBar: AppBar(
         title: const Text('Заказы'),
       ),
-      body: const OrdersView(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(const Duration(seconds: 1));
+          setState(() {});
+        },
+        child: const OrdersView(),
+      ),
     );
   }
 }
@@ -106,12 +113,25 @@ class OrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      key: const PageStorageKey('Orders'),
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      itemCount: globalOrders.orders.length,
-      itemBuilder: (context, int i) {
-        return OrderView(globalOrders.orders[i]);
+    final CloudStore _cloudStore = CloudStore();
+
+    return FutureBuilder(
+      future: _cloudStore.getOrders(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData && globalOrders.orders.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text('Ошибка'));
+        } else {
+          return ListView.builder(
+            key: const PageStorageKey('Orders'),
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            itemCount: globalOrders.orders.length,
+            itemBuilder: (context, int i) {
+              return OrderView(globalOrders.orders[i]);
+            },
+          );
+        }
       },
     );
   }

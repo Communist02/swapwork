@@ -79,7 +79,7 @@ class _ChatPageState extends State<ChatPage> {
             ? IconButton(
                 onPressed: () {
                   setState(() {
-                    globalContacts.addMessage(contact, textController.value.text);
+                    globalContacts.addMessage(account.id!, contact.id, textController.value.text);
                     textController.clear();
                     focusNode.unfocus();
                   });
@@ -99,7 +99,7 @@ class MessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isYou = message.isYou;
+    bool isYou = message.idSender == account.id;
     return InkWell(
       onLongPress: () {},
       child: Row(

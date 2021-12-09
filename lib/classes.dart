@@ -1,10 +1,12 @@
 class Order {
+  String id;
   String title;
   String description;
+  String idQuestioner;
   String nameQuestioner;
   DateTime dateTime = DateTime.now();
 
-  Order(this.title, {this.description = '', this.nameQuestioner = 'Anonymous'});
+  Order(this.title, this.description, this.idQuestioner, this.nameQuestioner, this.dateTime, {this.id = ''});
 }
 
 class Orders {
@@ -22,30 +24,31 @@ class Orders {
 }
 
 class Message {
+  String idSender;
+  String idRecipient;
   String value;
-  String sender;
   DateTime dateTime;
-  bool isYou;
 
-  Message(this.value, this.sender, this.dateTime, this.isYou);
+  Message(this.idSender, this.idRecipient, this.value, this.dateTime);
 }
 
 class Contact {
+  String id;
   String name;
   List<Message> chat;
 
-  Contact(this.name, this.chat);
+  Contact(this.id, this.name, this.chat);
 
   Message? lastMessage() {
     if (chat.isNotEmpty) {
-      return chat[0];
+      return chat[chat.length - 1];
     } else {
       return null;
     }
   }
 
-  addMessage(String value) {
-    chat.add(Message(value, name, DateTime.now(), true));
+  addMessage(String idSender, String value) {
+    chat.add(Message(idSender, name, value, DateTime.now()));
   }
 }
 
@@ -54,14 +57,28 @@ class Contacts {
 
   Contacts(this.contacts);
 
-  bool addMessage(Contact contact, String value) {
-    for (Contact contactIt in contacts) {
-      if (contact.name == contactIt.name) {
-        contactIt.addMessage(value);
+  bool addMessage(String idSender, idRecipient, String value) {
+    for (Contact contact in contacts) {
+      if (idRecipient == contact.id) {
+        contact.addMessage(idSender, value);
         return true;
       }
     }
     return false;
+  }
+
+  bool addMessageX(Message message) {
+    for (Contact contact in contacts) {
+      if (message.idRecipient == contact.id) {
+        contact.chat.add(message);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void addContact(Message message, String id, String name) {
+    contacts.add(Contact(id, name, [message]));
   }
 }
 

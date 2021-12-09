@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'classes.dart';
+import 'global.dart';
+import 'firebase.dart';
 
 class OrderPage extends StatefulWidget {
   final Order order;
@@ -49,8 +51,38 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 ),
               ),
-              onPressed: () {},
-              child: const Text('Написать'),
+              onPressed: () {
+                order.idQuestioner != account.id
+                    ? null
+                    : showDialog<String>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Подтверждение удаления'),
+                          content: const Text('Вы хотите удалить ваш заказ?'),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(21)),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'true'),
+                              child: const Text('Да'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'false'),
+                              child: const Text('Нет'),
+                            ),
+                          ],
+                        ),
+                      ).then((value) async {
+                        if (value == 'true') {
+                          final CloudStore cloudStore = CloudStore();
+                          await cloudStore.removeOrder(order.id);
+                          Navigator.pop(context);
+                        }
+                      });
+              },
+              child: order.idQuestioner == account.id
+                  ? const Text('Удалить')
+                  : const Text('Написать'),
             ),
           ),
         ],

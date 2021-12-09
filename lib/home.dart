@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-//import 'state_update.dart';
+import 'state_update.dart';
 import 'orders.dart';
 import 'my_orders.dart';
 import 'settings.dart';
@@ -28,9 +28,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //if (context.watch<ChangeNavigation>().getSwitch) {
-    //_index = context.watch<ChangeNavigation>().getIndex;
-    //}
+    if (context.watch<ChangeNavigation>().getSwitch) {
+      _index = context.watch<ChangeNavigation>().getIndex;
+    }
     return Scaffold(
       body: _page[_index],
       bottomNavigationBar: BottomNavyBar(

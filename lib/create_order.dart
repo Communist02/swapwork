@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'classes.dart';
 import 'global.dart';
+import 'firebase.dart';
 
-class CreateOrderPage extends StatefulWidget {
+class CreateOrderPage extends StatelessWidget {
   const CreateOrderPage({Key? key}) : super(key: key);
 
   @override
-  _CreateOrderPageState createState() => _CreateOrderPageState();
-}
-
-class _CreateOrderPageState extends State<CreateOrderPage> {
-  String title = '';
-  String description = '';
-
-  @override
   Widget build(BuildContext context) {
+    String title = '';
+    String description = '';
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -23,7 +19,22 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
             expandedHeight: 200,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () async {
+                  final CloudStore cloudStore = CloudStore();
+                  final order = Order(
+                    title,
+                    description,
+                    account.id.toString(),
+                    account.nickname,
+                    DateTime.now(),
+                  );
+                  await cloudStore.addOrder(order);
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Заказ создан'),
+                    duration: Duration(seconds: 1),
+                  ));
+                  Navigator.pop(context);
+                },
                 icon: const Icon(Icons.check),
               )
             ],
@@ -48,6 +59,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     hintText: 'Например: Решить задачу на Python',
                     border: OutlineInputBorder(),
                   ),
+                  onChanged: (value) {
+                    title = value;
+                  },
                 ),
               ),
               Container(
@@ -61,10 +75,13 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         'Например:\nНаписать код, который переводит целое число в строку, при том что его можно применить в любой системе счисления.',
                     border: OutlineInputBorder(),
                   ),
+                  onChanged: (value) {
+                    description = value;
+                  },
                 ),
               ),
             ]),
-          )
+          ),
         ],
       ),
     );
