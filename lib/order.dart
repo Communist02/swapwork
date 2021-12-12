@@ -4,33 +4,24 @@ import 'classes.dart';
 import 'global.dart';
 import 'firebase.dart';
 
-class OrderPage extends StatefulWidget {
+class OrderPage extends StatelessWidget {
   final Order order;
 
   const OrderPage(this.order, {Key? key}) : super(key: key);
 
   @override
-  _OrderPageState createState() => _OrderPageState(order);
-}
-
-class _OrderPageState extends State<OrderPage> {
-  final Order order;
-
-  void chat() async {
-    final CloudStore _cloudStore = CloudStore();
-    final contact = await _cloudStore.getContact(order.idQuestioner);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatPage(contact),
-      ),
-    );
-  }
-
-  _OrderPageState(this.order);
-
-  @override
   Widget build(BuildContext context) {
+    void chat() async {
+      final CloudStore _cloudStore = CloudStore();
+      final contact = await _cloudStore.getContact(order.idQuestioner);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatPage(contact),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Card(
