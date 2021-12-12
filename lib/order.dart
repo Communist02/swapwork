@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'chat.dart';
 import 'classes.dart';
 import 'global.dart';
 import 'firebase.dart';
@@ -14,6 +15,17 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   final Order order;
+
+  void chat() async {
+    final CloudStore _cloudStore = CloudStore();
+    final contact = await _cloudStore.getContact(order.idQuestioner);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatPage(contact),
+      ),
+    );
+  }
 
   _OrderPageState(this.order);
 
@@ -53,7 +65,7 @@ class _OrderPageState extends State<OrderPage> {
               ),
               onPressed: () {
                 order.idQuestioner != account.id
-                    ? null
+                    ? chat()
                     : showDialog<String>(
                         context: context,
                         builder: (context) => AlertDialog(

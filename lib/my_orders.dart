@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:swapwork/state_update.dart';
+import 'state_update.dart';
 import 'classes.dart';
 import 'create_order.dart';
 import 'firebase.dart';
@@ -16,70 +16,7 @@ class MyOrdersPage extends StatefulWidget {
 }
 
 class _MyOrdersPageState extends State<MyOrdersPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Мои заказы'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CreateOrderPage(),
-                ),
-              ).then((value) {
-                setState(() {});
-              });
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
-      body: account.id != null
-          ? RefreshIndicator(
-              onRefresh: () async {
-                await Future.delayed(const Duration(seconds: 1));
-                setState(() {});
-              },
-              child: const OrdersView(),
-            )
-          : const NotAccount(),
-    );
-  }
-}
-
-class NotAccount extends StatelessWidget {
-  const NotAccount({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: double.infinity,
-        child: InkWell(
-          onTap: () => context.read<ChangeNavigation>().change(4),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(Icons.person_outline_rounded, size: 150),
-              Text(
-                'Войдите в аккаунт',
-                style: TextStyle(fontSize: 20, fontFamily: 'BalsamiqSans'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class OrderView extends StatelessWidget {
-  final Order order;
-
-  const OrderView(this.order, {Key? key}) : super(key: key);
+  final CloudStore _cloudStore = CloudStore();
 
   String dateTime(DateTime dateTime) {
     final DateTime timeNow = DateTime.now();
@@ -99,8 +36,7 @@ class OrderView extends StatelessWidget {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  InkWell orderView(Order order) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -108,7 +44,7 @@ class OrderView extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => OrderPage(order),
           ),
-        );
+        ).then((value) => setState(() {}));
       },
       child: Card(
         elevation: 0,
@@ -152,33 +88,92 @@ class OrderView extends StatelessWidget {
       ),
     );
   }
-}
 
-class OrdersView extends StatelessWidget {
-  const OrdersView({Key? key}) : super(key: key);
+  FutureBuilder ordersView() {
+    return FutureBuilder(
+      future: _cloudStore.getMyOrders(),
+      initialData: globalMyOrders,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return const Center(child: Text('Нет сети'));
+          case ConnectionState.waiting:
+            return const Center(child: CircularProgressIndicator());
+          case ConnectionState.active:
+            return const Center(child: CircularProgressIndicator());
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              return const Center(child: Text('Ошибка'));
+            } else {
+              globalMyOrders = snapshot.data;
+              return ListView.builder(
+                key: const PageStorageKey('MyOrders'),
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                itemCount: snapshot.data.orders.length,
+                itemBuilder: (context, int i) {
+                  return orderView(snapshot.data.orders[i]);
+                },
+              );
+            }
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final CloudStore _cloudStore = CloudStore();
-
-    return FutureBuilder(
-      future: _cloudStore.getMyOrders(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (!snapshot.hasData && globalMyOrders.orders.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Ошибка'));
-        } else {
-          return ListView.builder(
-            key: const PageStorageKey('MyOrders'),
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            itemCount: globalMyOrders.orders.length,
-            itemBuilder: (context, int i) {
-              return OrderView(globalMyOrders.orders[i]);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Мои заказы'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateOrderPage(),
+                ),
+              ).then((value) => setState(() {}));
             },
-          );
-        }
-      },
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
+      body: account.id != null
+          ? RefreshIndicator(
+              onRefresh: () async {
+                await Future.delayed(const Duration(seconds: 1));
+                setState(() {});
+              },
+              child: ordersView(),
+            )
+          : const NotAccount(),
+    );
+  }
+}
+
+class NotAccount extends StatelessWidget {
+  const NotAccount({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: double.infinity,
+        child: InkWell(
+          onTap: () => context.read<ChangeNavigation>().change(4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.person_outline_rounded, size: 150),
+              Text(
+                'Войдите в аккаунт',
+                style: TextStyle(fontSize: 20, fontFamily: 'BalsamiqSans'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

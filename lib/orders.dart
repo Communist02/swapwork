@@ -5,6 +5,8 @@ import 'global.dart';
 import 'order.dart';
 import 'firebase.dart';
 
+bool _refresh = false;
+
 class OrdersPage extends StatefulWidget {
   const OrdersPage({Key? key}) : super(key: key);
 
@@ -22,9 +24,10 @@ class _OrdersPageState extends State<OrdersPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           await Future.delayed(const Duration(seconds: 1));
+          _refresh = true;
           setState(() {});
         },
-        child: const OrdersView(),
+        child: ordersView(),
       ),
     );
   }
@@ -108,31 +111,45 @@ class OrderView extends StatelessWidget {
   }
 }
 
-class OrdersView extends StatelessWidget {
-  const OrdersView({Key? key}) : super(key: key);
+Widget ordersView() {
+  final CloudStore _cloudStore = CloudStore();
 
-  @override
-  Widget build(BuildContext context) {
-    final CloudStore _cloudStore = CloudStore();
-
-    return FutureBuilder(
-      future: _cloudStore.getOrders(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (!snapshot.hasData && globalOrders.orders.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Ошибка'));
-        } else {
-          return ListView.builder(
-            key: const PageStorageKey('Orders'),
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            itemCount: globalOrders.orders.length,
-            itemBuilder: (context, int i) {
-              return OrderView(globalOrders.orders[i]);
-            },
-          );
-        }
+  if (globalOrders.orders.isNotEmpty && !_refresh) {
+    return ListView.builder(
+      key: const PageStorageKey('MyOrders'),
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      itemCount: globalOrders.orders.length,
+      itemBuilder: (context, int i) {
+        return OrderView(globalOrders.orders[i]);
       },
     );
   }
+  return FutureBuilder(
+    future: _cloudStore.getOrders(),
+    initialData: globalOrders,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      switch (snapshot.connectionState) {
+        case ConnectionState.none:
+          return const Center(child: Text('Нет сети'));
+        case ConnectionState.waiting:
+          return const Center(child: CircularProgressIndicator());
+        case ConnectionState.active:
+          return const Center(child: CircularProgressIndicator());
+        case ConnectionState.done:
+          if (snapshot.hasError) {
+            return const Center(child: Text('Ошибка'));
+          } else {
+            globalOrders = snapshot.data;
+            return ListView.builder(
+              key: const PageStorageKey('MyOrders'),
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              itemCount: snapshot.data.orders.length,
+              itemBuilder: (context, int i) {
+                return OrderView(snapshot.data.orders[i]);
+              },
+            );
+          }
+      }
+    },
+  );
 }

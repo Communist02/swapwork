@@ -29,6 +29,7 @@ class CreateOrderPage extends StatelessWidget {
                     DateTime.now(),
                   );
                   await cloudStore.addOrder(order);
+                  globalOrders.orders.insert(0, order);
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Заказ создан'),
                     duration: Duration(seconds: 1),

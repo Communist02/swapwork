@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'classes.dart';
 import 'package:intl/intl.dart';
 import 'global.dart';
+import 'firebase.dart';
 
 class ChatPage extends StatefulWidget {
   final Contact contact;
@@ -17,6 +18,7 @@ class _ChatPageState extends State<ChatPage> {
   bool isChanged = false;
   FocusNode focusNode = FocusNode();
   var textController = TextEditingController();
+  final CloudStore _cloudStore = CloudStore();
 
   _ChatPageState(this.contact);
 
@@ -38,7 +40,7 @@ class _ChatPageState extends State<ChatPage> {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 child: Text(
-                  contact.name,
+                  contact.nickname,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -79,8 +81,16 @@ class _ChatPageState extends State<ChatPage> {
             ? IconButton(
                 onPressed: () {
                   setState(() {
-                    globalContacts.addMessage(account.id!, contact.id, textController.value.text);
+                    final Message message = Message(
+                      account.id!,
+                      contact.id,
+                      textController.value.text,
+                      DateTime.now(),
+                    );
+                    _cloudStore.addMessage(message);
+                    contact.chat.add(message);
                     textController.clear();
+                    isChanged = false;
                     focusNode.unfocus();
                   });
                 },
@@ -170,6 +180,10 @@ class ChatView extends StatelessWidget {
           date.month == dateNow.month &&
           date.year == dateNow.year) {
         text = 'Сегодня';
+      } else if (date.day + 1 == dateNow.day &&
+          date.month == dateNow.month &&
+          date.year == dateNow.year) {
+        text = 'Вчера';
       } else if (date.year == dateNow.year) {
         text = DateFormat('dd.MM').format(date);
       } else {
@@ -207,12 +221,13 @@ class ChatView extends StatelessWidget {
           list.add(MessageView(message));
         }
       }
-      return list;
+      return list.reversed.toList();
     }
 
     return Scrollbar(
       child: ListView(
         padding: const EdgeInsets.only(bottom: 50),
+        reverse: true,
         children: messagesList(),
       ),
     );

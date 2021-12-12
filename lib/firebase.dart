@@ -71,7 +71,7 @@ class AuthService {
 class CloudStore {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<bool> getOrders() async {
+  Future<Orders> getOrders() async {
     final CollectionReference ordersBase = firestore.collection('orders');
     final CollectionReference accountsBase = firestore.collection('accounts');
     final result = await ordersBase.get();
@@ -88,11 +88,10 @@ class CloudStore {
       ));
     }
     orders.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-    globalOrders.orders = orders;
-    return true;
+    return Orders(orders);
   }
 
-  Future<bool> getMyOrders() async {
+  Future<Orders> getMyOrders() async {
     final CollectionReference ordersBase = firestore.collection('orders');
     final CollectionReference accountsBase = firestore.collection('accounts');
     final result = await ordersBase
@@ -111,17 +110,59 @@ class CloudStore {
       ));
     }
     orders.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-    globalMyOrders.orders = orders;
-    return true;
+    return Orders(orders);
   }
 
-  Future<bool> getContacts() async {
+  Future<Contacts> getContacts() async {
     final CollectionReference chatsBase = firestore.collection('messages');
     final CollectionReference accountsBase = firestore.collection('accounts');
     final firstMessagesResult = await chatsBase
         .where('idSender', isEqualTo: account.id.toString())
         .get();
     final secondMessagesResult = await chatsBase
+        .where('idRecipient', isEqualTo: account.id.toString())
+        .get();
+    Contacts contacts = Contacts([]);
+    for (final message in firstMessagesResult.docs) {
+      final messageTMP = Message(
+        message['idSender'],
+        message['idRecipient'],
+        message['value'],
+        DateTime.fromMillisecondsSinceEpoch(message['dateTime'].seconds * 1000),
+      );
+      if (!contacts.addMessageX(messageTMP)) {
+        final acc = await accountsBase.doc(messageTMP.idRecipient).get();
+        contacts.addContact(messageTMP, messageTMP.idRecipient, acc['nickname']);
+      }
+    }
+    for (final message in secondMessagesResult.docs) {
+      final messageTMP = Message(
+        message['idSender'],
+        message['idRecipient'],
+        message['value'],
+        DateTime.fromMillisecondsSinceEpoch(message['dateTime'].seconds * 1000),
+      );
+      if (!contacts.addMessageX(messageTMP)) {
+        final acc = await accountsBase.doc(messageTMP.idSender).get();
+        contacts.addContact(
+            messageTMP, messageTMP.idSender, acc['nickname']);
+      }
+    }
+    contacts.sortMessages();
+    return contacts;
+  }
+
+  Future<Contact> getContact(String idContact) async {
+    final CollectionReference chatsBase = firestore.collection('messages');
+    final CollectionReference accountsBase = firestore.collection('accounts');
+    final acc = await accountsBase.doc(idContact).get();
+    Contact contact = Contact(idContact, acc['nickname'], []);
+    final firstMessagesResult = await chatsBase
+        .where('idSender', isEqualTo: account.id.toString())
+        .where('idRecipient', isEqualTo: idContact)
+        .get();
+    final secondMessagesResult = await chatsBase
+        .where('idSender', isEqualTo: idContact)
         .where('idRecipient', isEqualTo: account.id.toString())
         .get();
     for (final message in firstMessagesResult.docs) {
@@ -131,27 +172,22 @@ class CloudStore {
         message['value'],
         DateTime.fromMillisecondsSinceEpoch(message['dateTime'].seconds * 1000),
       );
-      if (!globalContacts.addMessageX(messageTMP)) {
-        final acc = await accountsBase.doc(messageTMP.idRecipient).get();
-        globalContacts.addContact(messageTMP, messageTMP.idSender, acc['nickname']);
-      }
+      contact.chat.add(messageTMP);
     }
     for (final message in secondMessagesResult.docs) {
-     final messageTMP = Message(
+      final messageTMP = Message(
         message['idSender'],
         message['idRecipient'],
         message['value'],
         DateTime.fromMillisecondsSinceEpoch(message['dateTime'].seconds * 1000),
       );
-     if (!globalContacts.addMessageX(messageTMP)) {
-        final acc = await accountsBase.doc(messageTMP.idSender).get();
-        globalContacts.addContact(messageTMP, messageTMP.idRecipient, acc['nickname']);
-      }
+      contact.chat.add(messageTMP);
     }
-    return true;
+    contact.sortMessages();
+    return contact;
   }
 
-   Future<bool> addMessage(Message message) async {
+  Future<bool> addMessage(Message message) async {
     final CollectionReference messagesBase = firestore.collection('messages');
     messagesBase.add({
       'idSender': message.idSender,

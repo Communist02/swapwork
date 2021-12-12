@@ -34,10 +34,10 @@ class Message {
 
 class Contact {
   String id;
-  String name;
+  String nickname;
   List<Message> chat;
 
-  Contact(this.id, this.name, this.chat);
+  Contact(this.id, this.nickname, this.chat);
 
   Message? lastMessage() {
     if (chat.isNotEmpty) {
@@ -48,7 +48,11 @@ class Contact {
   }
 
   addMessage(String idSender, String value) {
-    chat.add(Message(idSender, name, value, DateTime.now()));
+    chat.add(Message(idSender, nickname, value, DateTime.now()));
+  }
+
+  void sortMessages() {
+     chat.sort((a, b) => a.dateTime.compareTo(b.dateTime));
   }
 }
 
@@ -79,6 +83,12 @@ class Contacts {
 
   void addContact(Message message, String id, String name) {
     contacts.add(Contact(id, name, [message]));
+  }
+
+  void sortMessages() {
+    for (int i = 0; i < contacts.length; i++) {
+      contacts[i].chat.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    }
   }
 }
 

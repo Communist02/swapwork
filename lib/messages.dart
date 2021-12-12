@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'classes.dart';
 import 'global.dart';
 import 'chat.dart';
+import 'firebase.dart';
 
 class MessagesPage extends StatefulWidget {
   const MessagesPage({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _MessagesPageState extends State<MessagesPage> {
         onPressed: () {},
         child: const Icon(Icons.chat_outlined),
       ),
-      body: const ContactsView(),
+      body: contactsView(),
     );
   }
 }
@@ -91,7 +92,7 @@ class ContactView extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 6),
                           child: Text(
-                            contact.name,
+                            contact.nickname,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -125,18 +126,35 @@ class ContactView extends StatelessWidget {
   }
 }
 
-class ContactsView extends StatelessWidget {
-  const ContactsView({Key? key}) : super(key: key);
+FutureBuilder contactsView() {
+  final CloudStore _cloudStore = CloudStore();
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      key: const PageStorageKey('Contacts'),
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      itemCount: globalContacts.contacts.length,
-      itemBuilder: (context, int i) {
-        return ContactView(globalContacts.contacts[i]);
-      },
-    );
-  }
+  return FutureBuilder(
+    future: _cloudStore.getContacts(),
+    initialData: globalContacts,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      switch (snapshot.connectionState) {
+        case ConnectionState.none:
+          return const Center(child: Text('Нет сети'));
+        case ConnectionState.waiting:
+          //return const Center(child: CircularProgressIndicator());
+        case ConnectionState.active:
+          //return const Center(child: CircularProgressIndicator());
+        case ConnectionState.done:
+          if (snapshot.hasError) {
+            return const Center(child: Text('Ошибка'));
+          } else {
+            globalContacts = snapshot.data;
+            return ListView.builder(
+              key: const PageStorageKey('MyOrders'),
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              itemCount: snapshot.data.contacts.length,
+              itemBuilder: (context, int i) {
+                return ContactView(snapshot.data.contacts[i]);
+              },
+            );
+          }
+      }
+    },
+  );
 }

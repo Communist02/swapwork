@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'state_update.dart';
 import 'orders.dart';
 import 'my_orders.dart';
@@ -33,49 +32,34 @@ class _HomePageState extends State<HomePage> {
     }
     return Scaffold(
       body: _page[_index],
-      bottomNavigationBar: BottomNavyBar(
-        selectedIndex: _index,
-        iconSize: 30,
-        backgroundColor:
-            Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-        onItemSelected: (int index) {
-          setState(() => _index = index);
-        },
-        items: [
-          BottomNavyBarItem(
-            icon: const Icon(Icons.receipt_outlined),
-            title: const Text('Заказы', overflow: TextOverflow.ellipsis),
-            activeColor: Colors.green,
-            inactiveColor:
-                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _index,
+        onTap: (int index) => setState(() => _index = index),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_outlined),
+            activeIcon: Icon(Icons.receipt),
+            label: 'Заказы',
           ),
-          BottomNavyBarItem(
-            icon: const Icon(Icons.message_outlined),
-            title: const Text('Сообщения', overflow: TextOverflow.ellipsis),
-            activeColor: Colors.blue,
-            inactiveColor:
-                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message_outlined),
+            activeIcon: Icon(Icons.message),
+            label: 'Сообщения',
           ),
-          BottomNavyBarItem(
-            icon: const Icon(Icons.my_library_books_outlined),
-            title: const Text('Мои заказы', overflow: TextOverflow.ellipsis),
-            activeColor: Colors.red,
-            inactiveColor:
-                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.my_library_books_outlined),
+            activeIcon: Icon(Icons.my_library_books),
+            label: 'Мои заказы',
           ),
-          BottomNavyBarItem(
-            icon: const Icon(Icons.settings_outlined),
-            title: const Text('Настройки', overflow: TextOverflow.ellipsis),
-            activeColor: Colors.purple,
-            inactiveColor:
-                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_outlined),
+            activeIcon: Icon(Icons.settings),
+            label: 'Настройки',
           ),
-          BottomNavyBarItem(
-            icon: const Icon(Icons.person_outlined),
-            title: const Text('Профиль', overflow: TextOverflow.ellipsis),
-            activeColor: Colors.orange,
-            inactiveColor:
-                Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outlined),
+            activeIcon: Icon(Icons.person),
+            label: 'Профиль',
           ),
         ],
       ),

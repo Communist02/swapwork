@@ -34,12 +34,10 @@ dependencies:
   cached_network_image: ^3.2.0
   backdrop: ^0.6.2
   bubble_tab_indicator: ^0.1.6
-  bottom_navy_bar: ^6.0.0
   badges: ^2.0.2
   intl: ^0.17.0
   cloud_firestore: ^3.1.4
   firebase_auth: ^3.3.3
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
