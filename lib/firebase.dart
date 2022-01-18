@@ -130,7 +130,7 @@ class CloudStore {
         message['value'],
         DateTime.fromMillisecondsSinceEpoch(message['dateTime'].seconds * 1000),
       );
-      if (!contacts.addMessageX(messageTMP)) {
+      if (!contacts.addMessage(messageTMP, true)) {
         final acc = await accountsBase.doc(messageTMP.idRecipient).get();
         contacts.addContact(messageTMP, messageTMP.idRecipient, acc['nickname']);
       }
@@ -142,7 +142,7 @@ class CloudStore {
         message['value'],
         DateTime.fromMillisecondsSinceEpoch(message['dateTime'].seconds * 1000),
       );
-      if (!contacts.addMessageX(messageTMP)) {
+      if (!contacts.addMessage(messageTMP, false)) {
         final acc = await accountsBase.doc(messageTMP.idSender).get();
         contacts.addContact(
             messageTMP, messageTMP.idSender, acc['nickname']);

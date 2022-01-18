@@ -124,6 +124,7 @@ Widget ordersView() {
       },
     );
   }
+  _refresh = false;
   return FutureBuilder(
     future: _cloudStore.getOrders(),
     initialData: globalOrders,

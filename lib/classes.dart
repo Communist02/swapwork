@@ -61,19 +61,13 @@ class Contacts {
 
   Contacts(this.contacts);
 
-  bool addMessage(String idSender, idRecipient, String value) {
+  bool addMessage(Message message, bool isYou) {
     for (Contact contact in contacts) {
-      if (idRecipient == contact.id) {
-        contact.addMessage(idSender, value);
+      if (isYou && message.idRecipient == contact.id) {
+        contact.chat.add(message);
         return true;
       }
-    }
-    return false;
-  }
-
-  bool addMessageX(Message message) {
-    for (Contact contact in contacts) {
-      if (message.idRecipient == contact.id) {
+      else if (message.idSender == contact.id) {
         contact.chat.add(message);
         return true;
       }
