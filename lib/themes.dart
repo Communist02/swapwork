@@ -15,8 +15,9 @@ class AppThemes {
     const Color accentColor = Colors.deepPurpleAccent;
     const Color cardColor = Color(0xFFEEEEEE);
 
-    final ThemeData base = ThemeData(
-     brightness: Brightness.light,
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
       primarySwatch: _materialColor(accentColor),
       primaryColor: accentColor,
       scaffoldBackgroundColor: Colors.white,
@@ -41,14 +42,14 @@ class AppThemes {
         unselectedLabelColor: Colors.black,
       ),
     );
-    return base;
   }
 
   ThemeData dark() {
     const Color primaryColor = Color(0xFF202020);
     const Color cardColor = Color(0xFF272727);
 
-    final ThemeData base = ThemeData(
+    return ThemeData(
+      useMaterial3: true,
       brightness: Brightness.dark,
       primarySwatch: _materialColor(Colors.white),
       primaryColor: primaryColor,
@@ -76,7 +77,6 @@ class AppThemes {
         unselectedLabelColor: Colors.white,
       ),
     );
-    return base;
   }
 }
 
