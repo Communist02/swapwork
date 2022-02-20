@@ -8,7 +8,6 @@ String _email = '';
 String _password = '';
 String _password2 = '';
 String _nickname = '';
-final _formKey = GlobalKey<FormState>();
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,12 +17,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  void callback() {
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
+    void callback() {
+      setState(() {});
+    }
+
     return Scaffold(
       body: SafeArea(
         child: account.id != null && !_reg
@@ -216,8 +215,9 @@ class Login extends StatelessWidget {
 
 class Registration extends StatelessWidget {
   final Function callback;
+  final _formKey = GlobalKey<FormState>();
 
-  const Registration(this.callback, {Key? key}) : super(key: key);
+  Registration(this.callback, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

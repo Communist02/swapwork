@@ -21,7 +21,7 @@ class CreateOrderPage extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   final CloudStore cloudStore = CloudStore();
-                  final order = Order(
+                  final Order order = Order(
                     title,
                     description,
                     account.id.toString(),

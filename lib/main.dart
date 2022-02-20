@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           builder: (BuildContext context, _) {
             context.watch<ChangeTheme>().getTheme;
             return MaterialApp(
-              title: 'Restaurant',
+              title: 'SwapWork',
               themeMode: AppThemes().getMode(appSettings['theme']!),
               theme: AppThemes().light(),
               darkTheme: AppThemes().dark(),

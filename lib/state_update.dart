@@ -12,16 +12,6 @@ class ChangeTheme with ChangeNotifier {
   }
 }
 
-class ChangeProfile with ChangeNotifier {
-  final bool _profile = true;
-
-  bool get get => _profile;
-
-  void change() {
-    notifyListeners();
-  }
-}
-
 class ChangeNavigation with ChangeNotifier {
   int _index = 0;
   bool _switch = false;
