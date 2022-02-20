@@ -37,6 +37,9 @@ class _HomePageState extends State<HomePage> {
       _index = context.watch<ChangeNavigation>().getIndex;
     }
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+      ),
       body: _page[_index],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,

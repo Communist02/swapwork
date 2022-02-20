@@ -453,15 +453,13 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     return Scaffold(
-      body: SafeArea(
-        child: account.id != null && !_reg
-            ? profile()
-            : _reg
-                ? registration()
-                : _reset
-                    ? resetPassword()
-                    : login(),
-      ),
+      body: account.id != null && !_reg
+          ? profile()
+          : _reg
+              ? registration()
+              : _reset
+                  ? resetPassword()
+                  : login(),
     );
   }
 }
