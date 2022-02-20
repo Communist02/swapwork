@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
               themeMode: AppThemes().getMode(appSettings['theme']!),
               theme: AppThemes().light(),
               darkTheme: AppThemes().dark(),
-              home: const HomePage(title: 'SwapWork'),
+              home: const HomePage(),
             );
           },
         ),
