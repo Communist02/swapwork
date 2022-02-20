@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
             context.watch<ChangeTheme>().getTheme;
             return MaterialApp(
               title: 'SwapWork',
-              themeMode: AppThemes().getMode(appSettings['theme']!),
+              themeMode:
+                  AppThemes().getMode(context.watch<ChangeTheme>().getTheme),
               theme: AppThemes().light(),
               darkTheme: AppThemes().dark(),
               home: const HomePage(),
