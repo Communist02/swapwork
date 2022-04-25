@@ -147,7 +147,7 @@ class MessageView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      DateFormat('hh:mm').format(message.dateTime),
+                      DateFormat('HH:mm').format(message.dateTime),
                       style: TextStyle(
                         fontSize: 12,
                         color: isYou
